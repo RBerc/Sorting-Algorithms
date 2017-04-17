@@ -11,11 +11,10 @@ namespace Sorting_Algorithms
 {
     class Program
     {
-        Stopwatch sw;   
+          
         //Start of Insertion Sort
-        public void insertionSort(int[] arr)
+        public static void insertionSort(int[] arr)
         {
-            sw = Stopwatch.StartNew();
             int num = arr.Length;
 
             for(int i =0; i<num; i++)
@@ -29,15 +28,12 @@ namespace Sorting_Algorithms
                     j--;
                 }
                 arr[j + 1] = key;
-                sw.Stop();
-                Console.WriteLine("Insertion Sort Result: %1 \n %2\n", arr, sw.Elapsed);
             }
         }
 
         //Start of Selection Sort
-        public void selectionSort(int[] arr)
+        public static void selectionSort(int[] arr)
         {
-            sw = Stopwatch.StartNew();
             int min, temp;
 
             for (int i = 0; i < arr.Length - 1; i++)
@@ -56,14 +52,11 @@ namespace Sorting_Algorithms
                     arr[min] = temp;
                 }
             }
-            sw.Stop();
-            Console.WriteLine("Selection Sort Result: %1 \n %2 \n", arr,sw.Elapsed);
         }
 
         //Start of Bubble Sort
-        public void bubbleSort(int[] arr)
+        public static void bubbleSort(int[] arr)
         {
-            sw = Stopwatch.StartNew();
             int temp = 0;
 
             for (int i = 0; i < arr.Length; i++)
@@ -78,14 +71,12 @@ namespace Sorting_Algorithms
                     }
                 }
             }
-            sw.Stop();
-            Console.WriteLine("Bubble Sort Result: %1 \n %2\n ", arr, sw.Elapsed);
         }
 
         //Start of MergeSort
-        public void merging( int[] arr, int left, int middle, int right)
+        public static void merging( int[] arr, int left, int middle, int right)
         {
-            int[] holder = new int[30];
+            int[] holder = new int[100];
             int endLeft, num, holderPos;
 
             endLeft = (middle - 1);
@@ -116,9 +107,8 @@ namespace Sorting_Algorithms
             }
         }
 
-        public void MergeSort( int [] arr, int left, int right)
+        public static void MergeSort( int [] arr, int left, int right)
         {
-            sw = Stopwatch.StartNew();
             int middle;
             if(right>left)
             {
@@ -128,26 +118,28 @@ namespace Sorting_Algorithms
 
                 merging(arr, left, (middle + 1), right); 
             }
-            sw.Stop();
-            Console.WriteLine("Mergsort Result: %1 \n %2 \n", arr, sw.Elapsed);
         }
 
         // Start of Quicksort
-        public int Partition(int[] arr, int left, int right)
+        public static int Partition(int[] arr, int left, int right)
         {
             int pivot = arr[left];
 
             while(true)
             {
-                while(arr[right]> pivot)
-                {
-                    right++;
-                }
-                while (arr[left] > pivot)
+                while (arr[left] < pivot)
                 {
                     left++;
                 }
-                if(left<right)
+                while (arr[right] > pivot)
+                {
+                    right--;
+                }
+                if(arr[right] == pivot && arr[left]==pivot)
+                {
+                    left++;
+                }
+                if (left<right)
                 {
                     int holder = arr[right];
                     arr[right] = arr[left];
@@ -160,9 +152,9 @@ namespace Sorting_Algorithms
             }
         }
 
-        public void QuickSort(int[] arr, int left, int right)
+        public static void QuickSort(int[] arr, int left, int right)
         {
-            sw = Stopwatch.StartNew();
+            //sw = Stopwatch.StartNew();
             if (left< right)
             {
                 int pivot = Partition(arr, left, right);
@@ -176,21 +168,55 @@ namespace Sorting_Algorithms
                     QuickSort(arr, pivot + 1, right);
                 }
             }
-            sw.Stop();
-            Console.WriteLine("QuickSort Result: %1 \n %2 \n", arr, sw.Elapsed);
+            //sw.Stop();
+            //results += string.Format("QuickSort Result: %1 \n %2 \n", arr.ToString(), sw.Elapsed);
+            //Console.WriteLine("QuickSort Result: %1 \n %2 \n", arr, sw.Elapsed);
         }
 
         static void Main(string[] args)
         {
+            string results = "";
+            Stopwatch swBubble, swQuick,swMerge,swInsertion,swSelection;
             Random rand = new Random();
-            int[] testArray = new int[100];
+            int[] testArray = new int[20];
             for(int i = 0; i<testArray.Length; i++)
             {
-                testArray[i] = rand.Next(10);
+                testArray[i] = rand.Next(1,25);
             }
-
-
-
+            Console.WriteLine(string.Format("Original Array: {0}", string.Join(",",testArray)));
+            
+            //BubbleSort Test
+            swBubble = Stopwatch.StartNew();
+            bubbleSort(testArray);
+            swBubble.Stop();
+            results += string.Format("Bubble Sort Result: {0} \n  Elapsed Time: {1} \n", string.Join(",",testArray), swBubble.Elapsed);
+            
+            // InsertionSort Test
+            swInsertion = Stopwatch.StartNew();
+            insertionSort(testArray);
+            swInsertion.Stop();
+            results += string.Format("Insertion Sort Result: {0} \n  Elapsed Time: {1} \n", string.Join(",", testArray), swInsertion.Elapsed);
+            
+            // Selection Sort Test
+            swSelection = Stopwatch.StartNew();
+            selectionSort(testArray);
+            swSelection.Stop();
+            results += string.Format("Selection Sort Result: {0} \n  Elapsed Time: {1} \n", string.Join(",", testArray), swSelection.Elapsed);
+            
+            //Merge Sort Test
+            swMerge = Stopwatch.StartNew();
+            MergeSort(testArray, 0, testArray.Length - 1);
+            swMerge.Stop();
+            results += string.Format("Merge Sort Result: {0} \n  Elapsed Time: {1} \n", string.Join(",", testArray), swMerge.Elapsed);
+            // Quicksort Test
+            swQuick = Stopwatch.StartNew();
+            QuickSort(testArray, 0, testArray.Length - 1);
+            swQuick.Stop();
+            results += string.Format("Quick Sort Result: {0} \n  Elapsed Time: {1} \n", string.Join(",", testArray), swQuick.Elapsed);
+            
+            // Print Results
+            Console.WriteLine(results);
+            Console.ReadKey();
 
         }
     }
